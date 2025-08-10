@@ -46,9 +46,9 @@ export default function CartPageItems(props) {
         </button>
       </div>
       <div className=" mb-1 p-2  text-black   h4 text-center">
-        <a href="#" onClick={handleBackButtonClick}>
+        <button className="button1" onClick={handleBackButtonClick}>
           Back
-        </a>{" "}
+        </button>{" "}
         to Shopping.
       </div>
 

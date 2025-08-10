@@ -227,6 +227,7 @@ export default function AdminProductForm(props) {
     discount: "",
     // unit: "",
     inStock: "",
+    qty:0,
   };
   let [product, setProduct] = useState("");
   let [flagLoader, setFlagLoader] = useState(false);
@@ -282,11 +283,17 @@ export default function AdminProductForm(props) {
     setFlagFormInvalid(false);
   }
   function handleInStockChange(event) {
-    
+    if(event.id=="+")
+    {
     setProduct({
       ...product,
       [event.target.name]: event.target.value,
     })
+    }
+    else 
+    {
+      setProduct("")
+    }
   }
    
   
@@ -388,7 +395,7 @@ export default function AdminProductForm(props) {
                   value={product.image}
                   onChange={handleTextChange}
                   onBlur={handleBlur}
-                  // onFocus={handleFocus}
+                   onFocus={handleFocus}
                 />
               </div>
               <div className="offset-4 offset-sm-6  text-start text-danger">
@@ -404,7 +411,7 @@ export default function AdminProductForm(props) {
                   required
                   onChange={handleTextChange}
                   onBlur={handleBlur}
-                  // onFocus={handleFocus}
+                   onFocus={handleFocus}
                 />
               </div>
               <div className="offset-4 offset-sm-6  text-start text-danger">
@@ -419,7 +426,7 @@ export default function AdminProductForm(props) {
                   value={product.discount}
                   onChange={handleTextChange}
                   onBlur={handleBlur}
-                  // onFocus={handleFocus}
+                   onFocus={handleFocus}
                   required
                 />
               </div>

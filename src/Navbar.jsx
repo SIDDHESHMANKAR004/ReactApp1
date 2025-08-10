@@ -25,9 +25,9 @@ export default function NavBar(props) {
 
   //   props.onLoginButtonClick();
   // }
-  let filteredData=productList.filter((item,index)=>{
-    item.tolo
-  })
+  // let filteredData=productList.filter((item,index)=>{
+  //   item.tolo
+  // })
   function handleFormButtonClick(view) {
     props.onFormButtonClick(view);
   }
@@ -92,6 +92,7 @@ export default function NavBar(props) {
               Welcome {user.name}{" "}
             </div>
           )}
+          
           {(view == "productPage" ||
             view == "admin" ||
             view == "bill" ||

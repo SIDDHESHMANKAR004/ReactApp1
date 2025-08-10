@@ -23,9 +23,9 @@ export default function ProductPage(props) {
     props.onDecrement(product);
   }
 
-  return (
+  return (  
     <>
-      <div className="row radius d-flex justify-content-center
+      <div className="row radius d-flex     ms-lg-5
        p-2 m-lg-3  m-2 Contain border-3  border-bottom  border-black  productbg text-center ">
         {productList.map((e, index) => (
           <Product

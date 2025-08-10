@@ -30,8 +30,9 @@ export default function App() {
       {/* <Assi68/>   */}
       {/* <Assi69/>   */}
       {/* <Assi70/> */}
-      {/* <Practice /> */}
+      {/*<Practice /> */}
       <Ecommerce/>
+      
       
       
       

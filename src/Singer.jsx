@@ -5,7 +5,7 @@ export default function Singer(props) {
 
   return (
     <>
-      <div className="text-center">
+      <div className="text-center" >
         <img  className=" img-fluid  " src={`/images_singers/${imageName}.jpg`} alt="No Img...." />
       </div>
     </>

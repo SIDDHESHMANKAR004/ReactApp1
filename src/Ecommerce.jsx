@@ -184,6 +184,7 @@ export default function Ecommerce() {
           usr.role = "admin";
         } else {
           usr.role = "user";
+          
         }
       } else {
         usr = null;
@@ -843,7 +844,7 @@ export default function Ecommerce() {
         )}
       </div>
 
-      {view == "Login" && (
+      {/* {view == "Login" && (
         <div className=" text-white productbg">
           <Login
             user={user}
@@ -865,7 +866,7 @@ export default function Ecommerce() {
             onLoginClick={handleLoginClick}
           />
         </div>
-      )}
+      )} */}
       {view == "cart" && (
         <div className="productbg vh-100  v">
           <CartPageItems
@@ -919,4 +920,4 @@ export default function Ecommerce() {
     </>
   );
 }
-// CartItems={CartItems}
+

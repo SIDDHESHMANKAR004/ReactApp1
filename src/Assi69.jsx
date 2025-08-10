@@ -2,7 +2,7 @@ import NavBarState from "./NavBarState";
 import InfoState from './InfoState';
 import { useState } from "react";
 
-export default function Assi69(){
+export default function  Assi69(){
     let [selectedIndex, setSelectedIndex] = useState(-1)
     let stateList = [
     {

@@ -15,6 +15,7 @@ export default function Bill(props) {
   let { name } = props;
   let { user } = props;
   let { message } = props;
+  // const [location, setLocation] = useState(window.location)
   // let [price,setPrice]=useState("")
   // const phonenumber = `8999181372`;
 
@@ -48,16 +49,39 @@ export default function Bill(props) {
     await updateBackendLastBillNumber(b);
     let billId = BillObj.id;
     console.log(billId);
+    // let newlocation;
 
-    window.localStorage.setItem("cartItems", JSON.stringify([]));
+
+
+    // // window.localStorage.setItem("cartItems", JSON.stringify([]));
+    
+    // const index =window.location.href.indexOf("#");
+    // if (index!=-1) {
+    //   newlocation = window.location.href.slice(index,1);
+    //   console.log(window.location.href);
+    //   console.log("hii");
+      
+      
+      
+    // }
+    // else
+    // {
+    //   newlocation=window.location.href;
+    //   console.log("hello");
+      
+      
+    // }
+    // setLocation(newlocation)
     let message = `I am ${user.name}.My Bill Number is ${currentBillNumber}.Its link is ${window.location}?id=${billId} `;
     // let billUrl = `https://siddreactapp1.netlify.app/?id=${billId}`;
     // let message = `I am ${user.name}.My Bill Number is ${currentBillNumber}.Its link is ${billUrl}`;
     // let encodedMessage = encodeURIComponent(message);
     setFlagLoader(false);
     console.log(message);
-
-    window.location = `https://api.whatsapp.com/send?phone=918999181372&text=${message}`;
+setTimeout(() => {
+  
+  window.location = `https://api.whatsapp.com/send?phone=918999181372&text=${message}`;
+}, 4000);
   }
   if (flagLoader) {
     return (

@@ -281,12 +281,12 @@ img {
   height: 450px;
   width: 100%;
 }
-.html {
+/* .html {
   background: url(/bodyimage.jpeg) no-repeat center    fixed;
    -webkit-background-size: cover;
   -moz-background-size: cover;
   -moz-background-size: cover; 
-}
+} */
 .bor{
   border-radius: 100%;
   border: 3px solid rgb(0, 0, 0);
