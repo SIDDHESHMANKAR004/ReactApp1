@@ -914,7 +914,7 @@ export default function Ecommerce() {
           />
         </div>
       )}
-      <div className="productbg">
+      <div className="productbg vh-100">
         {view == "FinalBillPage" && <Billpage bill={bill} />}
       </div>
     </>
