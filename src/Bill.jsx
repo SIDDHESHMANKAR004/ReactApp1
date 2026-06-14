@@ -3,7 +3,7 @@ import {
   addBillToBackend,
   getLastBillNumberFromBackend,
   updateBackendLastBillNumber,
-} from "./FirebaseBillNumberServices";
+} from "./mongoAPIClient";
 import { BeatLoader, PacmanLoader, RingLoader } from "react-spinners";
 // import { updateBackendProduct } from "./FirebaseProductServices";
 import { logEvent } from "firebase/analytics";

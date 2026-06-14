@@ -205,7 +205,7 @@ import fieldValidate from "./FieldValidate.js";
 import {
   addProductToBackend,
   updateBackendProduct,
-} from "./FirebaseProductServices.js";
+} from "./mongoAPIClient";
 // import { addDoc, collection } from "firebase/firestore";
 // {
 //   "id": "1",

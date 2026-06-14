@@ -25,21 +25,25 @@ export default function ProductPage(props) {
 
   return (  
     <>
-      <div className="row radius d-flex     ms-lg-5
-       p-2 m-lg-3  m-2 Contain border-3  border-bottom  border-black  productbg text-center ">
-        {productList.map((e, index) => (
-          <Product
-            product={e}
-            key={index}
-            index={index}
-            // onButtonClick={handleAddButtonClick}
-            onDecrement={handleDecrement}
-            onIncrement={handleIncrement}
-            onAddToCart={handleAddToCart}
-            // onChangeClick={handleQtyClick}
-          />
-        ))}
-      </div>
+      
+  <div className="container-fluid px-3 px-lg-5 py-4">
+    <div className="d-flex justify-content-between align-items-center mb-4">
+      <h4 className="fw-bold mb-0">All Shoes <span className="text-muted fs-6 fw-normal">({productList.length} products)</span></h4>
+    </div>
+    <div className="row g-3">
+      {productList.map((e, index) => (
+        <Product
+          product={e}
+          key={index}
+          index={index}
+          onDecrement={handleDecrement}
+          onIncrement={handleIncrement}
+          onAddToCart={handleAddToCart}
+        />
+      ))}
+    </div>
+  </div>
+
     </>
   );
 }

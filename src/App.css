@@ -1,48 +1,6 @@
- /* #root {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
-} */
-/* .content-page
-{
-  margin-top: 100px;
+html {
+  scroll-behavior: smooth;
 }
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
-}
-.logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
-}
-
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
-
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
-.card {
-  padding: 2em;
-}
-
-.read-the-docs {
-  color: #888;
-} */
 .myb {
   border: 2px solid black;
   text-align: center;
@@ -99,4 +57,30 @@
   .mycontainer {
     width:50%;
 }
+}
+/*Hero section styling*/
+.hero-section {
+  height: 100vh;
+  background: url('/your-hero-image.jpg') center/cover no-repeat;
+  position: relative;
+}
+
+.hero-section::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: rgba(0,0,0,0.4); /* overlay for readability */
+}
+
+.hero-section > div {
+  position: relative;
+  z-index: 2;
+}
+
+/* Mobile optimization */
+@media (max-width: 768px) {
+  .hero-section {
+    height: 70vh;
+    background-position: top;
+  }
 }

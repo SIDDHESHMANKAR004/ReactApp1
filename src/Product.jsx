@@ -23,77 +23,66 @@ export default function Product(props) {
   // }
 
   return (
-    <div className="    col-lg-2 col-sm-12 col-md-6 col-5 myb mx-2    bg    card  text-lg-center   m-lg-3     my-3   p-lg-4 p-2  radius       ">
-      <div className=" position-absolute   col-lg-3  col-5 h6   circle   ">
-        {product.discount > 0 && ` ${product.discount}%off `}
-      </div>
-      {/* <div className="">
-          {product.discount == 0 && ""}
-        </div>  */}
-
-      <img className="img-fluid" src={product.image} alt="" />
-
-      <div className="h5 my clr">
-        {product.name}{" "}
-        {/* {product.discount > 0 ? ` -(${product.discount}%)` : " "} */}
-      </div>
-      {product.discount === 0 && <h6> Rs {product.mrp}</h6>}
-      {product.discount != 0 && (
-        <h6>
-          Rs{" "}
-          <span className=" text-decoration-line-through clr">
-            {product.mrp}
-          </span>{" "}
-          {finalprice}
-        </h6>
+   <div className="col-6 col-md-4 col-lg-3">
+  <div className="card border-0 shadow-sm h-100 rounded-3 overflow-hidden">
+    
+    {/* Image area */}
+    <div className="position-relative bg-light">
+      {product.discount > 0 && (
+        <span className="badge bg-dark position-absolute top-0 start-0 m-2 rounded-pill px-2 py-1 small">
+          -{product.discount}%
+        </span>
       )}
+      <img
+        className="card-img-top object-fit-contain p-3"
+        src={product.image}
+        alt={product.name}
+        style={{ height: "180px" }}
+      />
+    </div>
 
-      <div className=" my-3  me-auto ms-auto p-2  mt-auto mb-auto">
-        {product.qty === 0 && (
-          <button
-            className={product.inStock ? " button1 " : " btn  btn-danger"}
-            disabled={!product.inStock}
-            onClick={handleAddToCart}
-          >
-            {product.inStock ? "Add to Cart" : "out of stock"}
-          </button>
+    {/* Body */}
+    <div className="card-body d-flex flex-column px-3 py-3">
+      <h6 className="card-title fw-semibold mb-1 text-truncate">{product.name}</h6>
+
+      {/* Price */}
+      <div className="mb-3">
+        {product.discount === 0 ? (
+          <span className="fw-bold">₹{product.mrp}</span>
+        ) : (
+          <span>
+            <span className="text-decoration-line-through text-muted me-1 small">₹{product.mrp}</span>
+            <span className="fw-bold text-dark">₹{finalprice}</span>
+          </span>
         )}
       </div>
 
-      {product.qty != 0 && (
-        <div className="row   d-flex pe-3  ">
-          <div className="col-3     col-sm-12 col-lg-3    ">
-            <button
-              className="  button1   my-0 "
-              id="-"
-              onClick={() => {
-                handleDecrement(product);
-              }}
-            >
-              -
-            </button>{" "}
-          </div>
-          <div className=" col-6    text-center  col-lg-6     clr h7 ">
-            <div className=" col-lg-12  col-12 ">qty: {product.qty} </div>
-            <div className=" col-lg-12 col-12">
-              {product.qty != 0 ? `Rs:${displayprice}` : " "}
-            </div>
-            {/* <div className="col-1 col-lg-5  clr "></div> */}
-          </div>
+      {/* Add to Cart / Out of Stock */}
+      <div className="mt-auto">
+        {product.qty === 0 && (
+          <button
+            className={`btn w-100 rounded-pill fw-semibold ${product.inStock ? "btn-dark" : "btn-danger"}`}
+            disabled={!product.inStock}
+            onClick={handleAddToCart}
+          >
+            {product.inStock ? "Add to Cart" : "Out of Stock"}
+          </button>
+        )}
 
-          <div className="col-3       col-lg-3    ">
-            <button
-              className="   button1 "
-              id="+"
-              onClick={() => {
-                handleIncrement(product);
-              }}
-            >
-              +
-            </button>
+        {/* Qty controls */}
+        {product.qty !== 0 && (
+          <div className="input-group">
+            <button className="btn btn-outline-dark" onClick={() => handleDecrement(product)}>−</button>
+            <div className="input-group-text flex-column flex-grow-1 text-center border-start-0 border-end-0 bg-white small">
+              <div className="fw-semibold">Qty: {product.qty}</div>
+              <div className="text-muted">₹{displayprice}</div>
+            </div>
+            <button className="btn btn-outline-dark" onClick={() => handleIncrement(product)}>+</button>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
+  </div>
+</div>
   );
 }
