@@ -1,0 +1,124 @@
+:root {
+  --motion-fast: 220ms cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-base: 700ms cubic-bezier(0.22, 1, 0.36, 1);
+  --motion-slow: 1000ms cubic-bezier(0.22, 1, 0.36, 1);
+  --elevate: 0 18px 48px rgba(17, 17, 17, 0.09);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+.animate-reveal {
+  opacity: 0;
+  transform: translate3d(0, 30px, 0) scale(0.98);
+  transition: opacity var(--motion-base), transform var(--motion-base);
+}
+
+.animate-reveal.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0) scale(1);
+}
+
+.animate-fade-up {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0);
+  transition: opacity var(--motion-base), transform var(--motion-base);
+}
+
+.animate-fade-up.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.animate-slide-left {
+  opacity: 0;
+  transform: translate3d(-160px, 0, 0);
+  transition: opacity 900ms ease, transform 900ms ease;
+}
+
+.animate-slide-left.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.animate-slide-right {
+  opacity: 0;
+  transform: translate3d(160px, 0, 0);
+  transition: opacity 900ms ease, transform 900ms ease;
+}
+
+.animate-slide-right.is-visible {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.animate-scale {
+  opacity: 0;
+  transform: scale(0.96);
+  transition: opacity var(--motion-fast), transform var(--motion-fast);
+}
+
+.animate-scale.is-visible {
+  opacity: 1;
+  transform: scale(1);
+}
+
+.animate-card {
+  transition: transform var(--motion-fast), box-shadow var(--motion-fast), border-color var(--motion-fast);
+}
+
+.animate-card:hover {
+  transform: translateY(-6px) scale(1.01);
+  box-shadow: var(--elevate);
+}
+
+.animate-image {
+  transition: transform var(--motion-fast), filter var(--motion-fast);
+}
+
+.animate-image:hover {
+  transform: scale(1.04);
+}
+
+.animate-float {
+  animation: float 4s ease-in-out infinite;
+}
+
+.animate-button {
+  transition: transform var(--motion-fast), box-shadow var(--motion-fast), background-color var(--motion-fast);
+}
+
+.animate-button:hover {
+  transform: translateY(-2px) scale(1.02);
+  box-shadow: 0 12px 30px rgba(17, 17, 17, 0.12);
+}
+
+.animate-button:active {
+  transform: scale(0.98);
+}
+
+.animate-stagger > * {
+  opacity: 0;
+  transform: translate3d(0, 16px, 0);
+  transition: opacity var(--motion-base), transform var(--motion-base);
+}
+
+.animate-stagger.is-visible > * {
+  opacity: 1;
+  transform: translate3d(0, 0, 0);
+}
+
+.animate-stagger.is-visible > *:nth-child(2) { transition-delay: 100ms; }
+.animate-stagger.is-visible > *:nth-child(3) { transition-delay: 180ms; }
+.animate-stagger.is-visible > *:nth-child(4) { transition-delay: 260ms; }
+.animate-stagger.is-visible > *:nth-child(5) { transition-delay: 340ms; }
+
+@keyframes float {
+  0%, 100% { transform: translateY(0px); }
+  50% { transform: translateY(-8px); }
+}
