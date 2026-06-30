@@ -33,7 +33,7 @@ export default function HeroSection() {
                 <span className="fw-semibold">Featured drop</span>
                 <span className="badge rounded-pill bg-warning text-dark">New</span>
               </div>
-              <img src="/shoes10.jpg" alt="Featured product" className="w-100 rounded-4 mb-3 animate-image" style={{ height: "260px", objectFit: "cover" }} />
+              <img src="/shoes4.jpg" alt="Featured product" className="w-100 rounded-4 mb-3 animate-image img-fluid" style={{ height: "260px", objectFit: "cover" }} />
               <h4 className="fw-bold mb-2">Lunar Runner</h4>
               <p className="text-muted mb-3">Lightweight comfort with sculpted cushioning and signature detailing.</p>
               <div className="d-flex justify-content-between align-items-center">

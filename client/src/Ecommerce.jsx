@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import ProductPage from "./ProductPage";
 import NavBar from "./Navbar";
 import SignUpPage from "./SignUpPage";
+import AboutUspage from "./AboutUspage";
+import ContactPage from "./ContactPage";
 import Login from "./Login";
 import axios from "axios";
 import CartPageItems from "./CartPageItems";
@@ -282,7 +284,7 @@ provider.setCustomParameters({
 
   //Sign_UP & Login Button Handle
   function handleFormButtonClick(view) {
-    console.log(view);
+    //console.log(view);
     setView(view);
     // setCnt("")
     // setTotalPrice("")
@@ -463,6 +465,10 @@ provider.setCustomParameters({
           <PremiumSections />
         </>
       )}
+      {view== "aboutPage" && (<div><AboutUspage
+                onFormButtonClick={handleFormButtonClick}></AboutUspage></div>)}
+                 {view== "contactPage" && (<div><ContactPage
+                onFormButtonClick={handleFormButtonClick}></ContactPage></div>)}
       <div className="  productbg ">
         {view == "productPage" && (
           <div className="">

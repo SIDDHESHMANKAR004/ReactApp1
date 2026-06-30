@@ -5,6 +5,7 @@ export default function NavBar(props) {
   function handleFormButtonClick(nextView) {
     onFormButtonClick(nextView);
   }
+  
   function handleCartItems() {
     onCartItems(view);
   }
@@ -22,17 +23,16 @@ export default function NavBar(props) {
           <div className="col-12 col-lg-7 order-3 order-lg-2">
             <div className="d-flex flex-wrap justify-content-center gap-3 gap-lg-4 align-items-center">
               <a href="#" className="nav-link-custom" onClick={() => handleFormButtonClick("productPage")}>Shop</a>
-              <a href="#" className="nav-link-custom">Categories</a>
-              <a href="#" className="nav-link-custom">About</a>
-              <a href="#" className="nav-link-custom">Blog</a>
-              <a href="#" className="nav-link-custom">Contact</a>
+              {/* <a href="#" className="nav-link-custom" onClick={() => handleFormButtonClick("categoriesPage")}>Categories</a> */}
+              <a href="#" className="nav-link-custom" onClick={() => handleFormButtonClick("aboutPage")}>About</a>
+              <a href="#" className="nav-link-custom" onClick={() => handleFormButtonClick("contactPage")}>Contact</a>
             </div>
           </div>
 
           <div className="col-5 col-lg-3 order-2 order-lg-3 d-flex justify-content-end align-items-center gap-2">
-            <button className="nav-icon-btn" type="button" onClick={() => handleFormButtonClick("productPage")}>
+            {/* <button className="nav-icon-btn" type="button" onClick={() => handleFormButtonClick("productPage")}>
               <i className="bi bi-search"></i>
-            </button>
+            </button> */}
             <button className="nav-icon-btn" type="button" onClick={handleCartItems}>
               <i className="bi bi-bag"></i>
             </button>
