@@ -20,22 +20,33 @@ export default function Bill(props) {
   async function handleBillCreateClick() {
     setFlagLoader(true);
     const b = await getLastBillNumberFromBackend();
-    const currentBillNumber = b.lastbillnumber + 1;
+    const currentBillNumber = b.lastNumber + 1;
 
     let billObj = {
-      billNumber: currentBillNumber,
-      customer: user.name,
-      date: new Date(),
-      amount: totalprice,
-      soldProducts: CartItems,
-    };
+  billNumber: String(currentBillNumber),
+
+  userId: user.id || user._id || user.name,
+
+  items: CartItems.map(item => ({
+    productId: item.id || item._id,
+    name: item.name,
+    quantity: item.qty,
+    price: calculateDiscountedPrice(item.mrp, item.discount),
+    total:
+      calculateDiscountedPrice(item.mrp, item.discount) * item.qty,
+  })),
+
+  totalAmount: totalprice,
+  finalAmount: totalprice,
+  paymentMethod: "Cash",
+};
     console.log("Bill Object:", billObj);
     console.log("CartItems:", CartItems);
 
 console.log("Bill Object:", JSON.stringify(billObj, null, 2));
     billObj = await addBillToBackend(billObj);
 
-    b.lastbillnumber = currentBillNumber;
+    b.lastNumber = currentBillNumber;
     await updateBackendLastBillNumber(b);
 
     const message = `I am ${user.name}.My Bill Number is ${currentBillNumber}.Its link is ${window.location}?id=${billObj.id} `;
