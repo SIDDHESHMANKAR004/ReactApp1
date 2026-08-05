@@ -34,7 +34,7 @@ export default function Billpage(props) {
                   <div className="col-2 text-center">Qty</div>
                   <div className="col-3 text-end">Total</div>
                 </div>
-                {bill.soldProducts.map((e, index) => {
+                {bill.items.map((e, index) => {
                   const discountedPrice = calculateDiscountedPrice(e.mrp, e.discount);
                   const totalPrice = discountedPrice * e.qty;
                   return (
