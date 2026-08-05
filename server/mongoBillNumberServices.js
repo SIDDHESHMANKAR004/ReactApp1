@@ -54,7 +54,7 @@ const lastBillNumberSchema = new mongoose.Schema(
 );
 
 const Bill = mongoose.model('Bill', billSchema);
-const LastBillNumber = mongoose.model('LastBillNumber', lastBillNumberSchema);
+const LastBillNumber = mongoose.model('lastNumber', lastBillNumberSchema);
 
 // Get bill by ID
 async function importBackendDataToBill(id) {
