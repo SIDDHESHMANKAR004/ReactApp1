@@ -94,15 +94,22 @@ async function getLastBillNumberFromBackend() {
 // Add bill to backend
 async function addBillToBackend(BillObj) {
   try {
+    console.log("========== RECEIVED FROM FRONTEND ==========");
+    console.log(JSON.stringify(BillObj, null, 2));
+
     const newBill = new Bill(BillObj);
+
+    console.log("========== MONGOOSE OBJECT ==========");
+    console.log(JSON.stringify(newBill, null, 2));
+
     const savedBill = await newBill.save();
-    console.log('Bill created with ID:', savedBill._id);
+
     return {
       ...savedBill.toObject(),
       id: savedBill._id.toString(),
     };
   } catch (error) {
-    console.error('Error adding bill:', error);
+    console.error(error);
     throw error;
   }
 }

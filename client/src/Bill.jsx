@@ -30,6 +30,9 @@ export default function Bill(props) {
       soldProducts: CartItems,
     };
     console.log("Bill Object:", billObj);
+    console.log("CartItems:", CartItems);
+
+console.log("Bill Object:", JSON.stringify(billObj, null, 2));
     billObj = await addBillToBackend(billObj);
 
     b.lastbillnumber = currentBillNumber;
