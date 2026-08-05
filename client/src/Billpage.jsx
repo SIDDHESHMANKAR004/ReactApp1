@@ -1,15 +1,16 @@
 import React from "react";
 import Reveal from "./Reveal";
-import { calculateDiscountedPrice } from "./utils/productUtils";
 
 export default function Billpage(props) {
   const { bill } = props;
   const currentDate = new Date().toLocaleDateString();
+
   const formatCurrency = (amount) =>
     Number(amount || 0).toLocaleString("en-IN", {
       maximumFractionDigits: 2,
       minimumFractionDigits: 2,
     });
+
   return (
     <div className="page-shell py-5">
       <div className="container-fluid px-3 px-lg-5">
@@ -23,7 +24,10 @@ export default function Billpage(props) {
                 </div>
                 <div className="text-lg-end mt-3 mt-lg-0">
                   <div className="fw-bold">Date: {currentDate}</div>
-                  <div className="text-muted">Customer: {bill.customer}</div>
+                  <div className="text-muted">Customer: {bill.userId}</div>
+                  {bill.billNumber && (
+                    <div className="text-muted small">Bill #: {bill.billNumber}</div>
+                  )}
                 </div>
               </div>
 
@@ -35,14 +39,13 @@ export default function Billpage(props) {
                   <div className="col-3 text-end">Total</div>
                 </div>
                 {bill.items.map((e, index) => {
-                  const discountedPrice = calculateDiscountedPrice(e.mrp, e.discount);
-                  const totalPrice = discountedPrice * e.qty;
+                  // e.price is the discounted unit price, e.total is already price * quantity
                   return (
                     <div className="row py-2 border-top" key={index}>
                       <div className="col-5">{`${index + 1}) ${e.name}`}</div>
-                      <div className="col-2">₹{formatCurrency(discountedPrice)}</div>
-                      <div className="col-2 text-center">{e.qty}</div>
-                      <div className="col-3 text-end">₹{formatCurrency(totalPrice)}</div>
+                      <div className="col-2">₹{formatCurrency(e.price)}</div>
+                      <div className="col-2 text-center">{e.quantity}</div>
+                      <div className="col-3 text-end">₹{formatCurrency(e.total)}</div>
                     </div>
                   );
                 })}
@@ -50,7 +53,7 @@ export default function Billpage(props) {
 
               <div className="d-flex justify-content-between align-items-center border-top pt-3">
                 <span className="fw-bold">Grand total</span>
-                <span className="fw-bold fs-5">₹{formatCurrency(bill.amount)}</span>
+                <span className="fw-bold fs-5">₹{formatCurrency(bill.totalAmount)}</span>
               </div>
             </Reveal>
           </div>
