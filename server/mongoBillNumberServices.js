@@ -94,16 +94,13 @@ async function getLastBillNumberFromBackend() {
 // Add bill to backend
 async function addBillToBackend(BillObj) {
   try {
-    console.log("========== RECEIVED FROM FRONTEND ==========");
-    console.log(JSON.stringify(BillObj, null, 2));
+    // Generate a new bill number atomically
+    const billNumber = await generateNextBillNumber();
+    // Override any billNumber provided by the frontend
+    BillObj.billNumber = billNumber;
 
     const newBill = new Bill(BillObj);
-
-    console.log("========== MONGOOSE OBJECT ==========");
-    console.log(JSON.stringify(newBill, null, 2));
-
     const savedBill = await newBill.save();
-
     return {
       ...savedBill.toObject(),
       id: savedBill._id.toString(),
@@ -178,16 +175,33 @@ async function deleteBackendBill(billId) {
 }
 
 // Generate new bill number
+// async function generateNextBillNumber() {
+//   try {
+//     let billNumber = await LastBillNumber.findOne({});
+//     if (!billNumber) {
+//       billNumber = new LastBillNumber();
+//     }
+//     billNumber.lastNumber += 1;
+//     billNumber.updatedAt = new Date();
+//     await billNumber.save();
+//     return `${billNumber.prefix}${billNumber.lastNumber}`;
+//   } catch (error) {
+//     console.error('Error generating bill number:', error);
+//     throw error;
+//   }
+// }
 async function generateNextBillNumber() {
   try {
-    let billNumber = await LastBillNumber.findOne({});
-    if (!billNumber) {
-      billNumber = new LastBillNumber();
-    }
-    billNumber.lastNumber += 1;
-    billNumber.updatedAt = new Date();
-    await billNumber.save();
-    return `${billNumber.prefix}${billNumber.lastNumber}`;
+    const result = await LastBillNumber.findOneAndUpdate(
+      {},                     // find any document (or create one)
+      { $inc: { lastNumber: 1 } },
+      { 
+        new: true,            // return the updated document
+        upsert: true,         // create if it doesn't exist
+        setDefaultsOnInsert: true
+      }
+    );
+    return `${result.prefix}${result.lastNumber}`;
   } catch (error) {
     console.error('Error generating bill number:', error);
     throw error;
