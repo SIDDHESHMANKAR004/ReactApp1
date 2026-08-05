@@ -23,8 +23,7 @@ export default function Bill(props) {
     const currentBillNumber = b.lastNumber + 1;
 
     let billObj = {
-  billNumber: String(currentBillNumber),
-
+billNumber: `${b.prefix}${currentBillNumber}`,
   userId: user.id || user._id || user.name,
 
   items: CartItems.map(item => ({
