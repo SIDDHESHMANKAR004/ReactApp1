@@ -194,11 +194,24 @@ app.get('/api/bills/:id', async (req, res) => {
 });
 
 // Add bill
+// app.post('/api/bills', async (req, res) => {
+//   try {
+//     const bill = await addBillToBackend(req.body);
+//     res.status(201).json(bill);
+//   } catch (error) {
+//     res.status(500).json({ error: error.message });
+//   }
+// });
 app.post('/api/bills', async (req, res) => {
   try {
+    console.log("========== REQUEST BODY ==========");
+    console.log(JSON.stringify(req.body, null, 2));
+
     const bill = await addBillToBackend(req.body);
+
     res.status(201).json(bill);
   } catch (error) {
+    console.error(error);
     res.status(500).json({ error: error.message });
   }
 });
