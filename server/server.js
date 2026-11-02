@@ -43,10 +43,15 @@ connectDB();
 
 // ===================== PRODUCT ROUTES =====================
 
-// Get all products
+// Get all products, or filter by category when requested
 app.get('/api/products', async (req, res) => {
   try {
-    const products = await getProductsFromBackend();
+    const { category } = req.query;
+    if (category !== undefined && typeof category !== 'string') {
+      return res.status(400).json({ error: 'Category must be a single string' });
+    }
+
+    const products = await getProductsFromBackend(category);
     res.json(products);
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -204,8 +209,8 @@ app.get('/api/bills/:id', async (req, res) => {
 // });
 app.post('/api/bills', async (req, res) => {
   try {
-    console.log("========== REQUEST BODY ==========");
-    console.log(JSON.stringify(req.body, null, 2));
+    // console.log("========== REQUEST BODY ==========");
+    // console.log(JSON.stringify(req.body, null, 2));
 
     const bill = await addBillToBackend(req.body);
 
@@ -277,3 +282,4 @@ app.get('/api/health', (req, res) => {
 app.listen(PORT, () => {
   console.log(`Server is running on http://localhost:${PORT}`);
 });
+ 

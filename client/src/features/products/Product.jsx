@@ -1,6 +1,6 @@
-import "./index.css";
-import { calculateDiscountedPrice } from "./utils/productUtils";
-import Reveal from "./Reveal";
+import "../../hooks/index.css";
+import { calculateDiscountedPrice } from "../../utils/productUtils";
+import Reveal from "../../components/common/Reveal";
 
 export default function Product(props) {
   const { product, onAddToCart, onIncrement, onDecrement } = props;

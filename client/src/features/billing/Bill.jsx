@@ -4,8 +4,8 @@ import {
   addBillToBackend,
   getLastBillNumberFromBackend,
   updateBackendLastBillNumber,
-} from "./mongoAPIClient";
-import { calculateDiscountedPrice } from "./utils/productUtils";
+} from "../../mongoAPIClient";
+import { calculateDiscountedPrice } from "../../utils/productUtils";
 
 export default function Bill(props) {
   const { CartItems, totalprice, user } = props;
@@ -39,10 +39,10 @@ billNumber: `${b.prefix}${currentBillNumber}`,
   finalAmount: totalprice,
   paymentMethod: "Cash",
 };
-    console.log("Bill Object:", billObj);
-    console.log("CartItems:", CartItems);
+//     console.log("Bill Object:", billObj);
+//     console.log("CartItems:", CartItems);
 
-console.log("Bill Object:", JSON.stringify(billObj, null, 2));
+// console.log("Bill Object:", JSON.stringify(billObj, null, 2));
     billObj = await addBillToBackend(billObj);
 
     b.lastNumber = currentBillNumber;

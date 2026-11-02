@@ -1,18 +1,16 @@
-import React, { useEffect, useState } from "react";
-import ProductPage from "./ProductPage";
-import NavBar from "./Navbar";
-import SignUpPage from "./SignUpPage";
+import React, { useEffect, useRef, useState } from "react";
+import ProductPage from "../products/ProductPage";
+import NavBar from "../../components/common/Navbar";
 import AboutUspage from "./AboutUspage";
 import ContactPage from "./ContactPage";
-import Login from "./Login";
-import axios from "axios";
-import CartPageItems from "./CartPageItems";
+import CartPageItems from "../cart/CartPageItems";
 // import AdminProductForm from "./AdminProductForm";
-import AdminProductPage from "./AdminProductPage";
-import Bill from "./Bill";
+import AdminProductPage from "../products/AdminProductPage";
+import Bill from "../billing/Bill";
 import { RingLoader } from "react-spinners";
+import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 // import { DotLottieReact } from "";
-import app from "./firebase";
+import app from "../../services/firebase";
 
 import {
   getAuth,
@@ -26,11 +24,13 @@ import {
   addUserToBackend,
   getUserFromBackend,
   importBackendDataToBill,
-} from "./mongoAPIClient";
-import Billpage from "./Billpage";
+} from "../../mongoAPIClient";
+import Billpage from "../billing/Billpage";
 import HeroSection from "./HeroSection";
-import PremiumSections from "./PremiumSections";
-import "./animations.css";
+import PremiumSections from "../../PremiumSections";
+import "../../animations.css";
+import Categories from "../../Categories";
+import { calculateDiscountedPrice } from "../../utils/productUtils";
 
 export default function   Ecommerce() {
   // useEffect(() => {
@@ -45,6 +45,9 @@ export default function   Ecommerce() {
 
   // let [FilteredList, setFilteredList] = useState([]);
   let [productList, setProductList] = useState([]);
+  let [categoryProductList, setCategoryProductList] = useState([]);
+  let [selectedCategory, setSelectedCategory] = useState("");
+  let [categoryLoadError, setCategoryLoadError] = useState("");
   let [signupstatus, setSignupStatus] = useState("no");
   let [loginStatus, setLoginStatus] = useState("no");
   let [message, setMessage] = useState("");
@@ -54,6 +57,7 @@ export default function   Ecommerce() {
   let [text, setText] = useState([]);
   let [flagLoader, setFlagLoader] = useState(false);
   let [bill, setbill] = useState("");
+  const categoryRequestId = useRef(0);
   const provider = new GoogleAuthProvider();
 
 provider.setCustomParameters({
@@ -78,7 +82,7 @@ provider.setCustomParameters({
 
         return;
       } else {
-        console.log("got it");
+        // console.log("got it");
 
         getBill(billId);
       }
@@ -86,12 +90,33 @@ provider.setCustomParameters({
       // handleBackendData();
     }
   }, []);
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (firebaseUser) => {
+      if (!firebaseUser) {
+        setUser(null);
+        setLoginStatus("no");
+        return;
+      }
+
+      const emailid = firebaseUser.email || "";
+      setUser({
+        user: firebaseUser,
+        name: firebaseUser.displayName || emailid,
+        emailid,
+        role: emailid === "mankarsiddhesh732@gmail.com" ? "admin" : "user",
+      });
+      setLoginStatus("success");
+    });
+
+    return unsubscribe;
+  }, [auth]);
  
   async function getBill(billId) {
     setFlagLoader(true);
     let b = await importBackendDataToBill(billId);
-    console.log("Here is the bill");
-    console.log(b);
+    // console.log("Here is the bill");
+    // console.log(b);
     if (b == null) {
       setbill(b);
       setFlagLoader(false);
@@ -99,7 +124,7 @@ provider.setCustomParameters({
       return;
     }
     // b.date = new Date(b.date.toDate());
-    console.log("coming datas");
+    // console.log("coming datas");
 
     // setCartItems(b)
     setbill(b);
@@ -120,42 +145,52 @@ provider.setCustomParameters({
       return e;
     });
 
-    let usr;
-    let cItems = [];
-    await onAuthStateChanged(auth, (user) => {
-      // console.log(user);
-      usr = {};
-      if (user) {
-        usr.name = user.displayName;
-        usr.email == user.email;
-        if (usr.email == "mankarsiddhesh732@gmail.com") {
-          usr.role = "admin";
-        } else {
-          usr.role = "user";
-          
-        }
-      } else {
-        usr = null;
-      }
-    });
-    setUser(usr);
-   
     setProductList(list);
     setView("productPage");
+  }
+
+  async function handleCategorySelect(category) {
+    const requestId = ++categoryRequestId.current;
+    setSelectedCategory(category);
+    setCategoryLoadError("");
+    setView("categoryProducts");
+    setFlagLoader(true);
+
+    try {
+      const products = await getProductsFromBackend(category);
+      if (requestId !== categoryRequestId.current) return;
+
+      setCategoryProductList(
+        products
+          .filter(
+            (product) =>
+              String(product.category || "").trim().toLowerCase() ===
+              category.trim().toLowerCase()
+          )
+          .map((product) => {
+            const currentProduct = productList.find(
+              (item) => (item.id || item._id) === (product.id || product._id)
+            );
+            return { ...product, qty: currentProduct?.qty || 0 };
+          })
+      );
+    } catch (error) {
+      if (requestId !== categoryRequestId.current) return;
+      console.error(`Unable to load ${category} products:`, error);
+      setCategoryLoadError(`Unable to load ${category} products. Please try again.`);
+      setCategoryProductList([]);
+    } finally {
+      if (requestId === categoryRequestId.current) {
+        setFlagLoader(false);
+      }
+    }
   }
  
   function handleCartItems() {
     if (cnt <= 0 && totalprice <= 0) {
       setView("noelement");
     } else if (!user) {
-      // setMessage("You need to login first!");
-      console.log("you need to login first");
-
-      setTimeout(() => {
-        // setMessage("");
-        window.alert("you need to login first");
-        // setView("Login");
-      }, 1000); // Clear message after 2 seconds
+      handleLoginButtonClickUsingGoogle(() => setView("cart"));
     } else {
       setView("cart");
     }
@@ -163,33 +198,33 @@ provider.setCustomParameters({
   
   //Handle Add to cart operation
   function handleAddToCart(product) {
-    console.log(CartItems);
+    const productId = product.id || product._id;
+    const isInCart = CartItems.some((item) => (item.id || item._id) === productId);
+    const updatedProduct = { ...product, qty: (Number(product.qty) || 0) + 1 };
 
-    let temp = [...productList];
-    let index = temp.indexOf(product);
-    let newProduct = { ...temp[index] };
-
-    if (newProduct.qty == 0) {
-      newProduct.qty = 1;
-      setCnt(cnt + 1);
-      temp[index] = newProduct;
-      setProductList([...temp]);
-
-      setCartItems([...CartItems, newProduct]);
-
-      
-      setTotalPrice(
-        totalprice + product.mrp * (1 - product.discount / 100).toFixed(2)
+    setProductList((currentProducts) =>
+      currentProducts.map((item) =>
+        (item.id || item._id) === productId ? updatedProduct : item
+      )
+    );
+    setCartItems((currentItems) => {
+      const existingItem = currentItems.find(
+        (item) => (item.id || item._id) === productId
       );
+      return existingItem
+        ? currentItems.map((item) =>
+            (item.id || item._id) === productId
+              ? { ...item, qty: item.qty + 1 }
+              : item
+          )
+        : [...currentItems, updatedProduct];
+    });
+    if (!isInCart) {
+      setCnt((currentCount) => currentCount + 1);
     }
-    let updatedCart;
-    if (CartItems && CartItems.length > 0) {
-      updatedCart = [...CartItems];
-    } else {
-      updatedCart = [];
-    }
-    updatedCart.push(newProduct);
-    setCartItems(updatedCart);
+    setTotalPrice((currentTotal) =>
+      Number((currentTotal + calculateDiscountedPrice(product.mrp, product.discount)).toFixed(2))
+    );
   }
 
  
@@ -310,7 +345,7 @@ provider.setCustomParameters({
   function handleLoginClick(event) {
     setView(event);
     // setView("product");
-    console.log(view);
+    // console.log(view);
   }
   function handleDeleteCartAdmin(product, flag) {
     if (flag) {
@@ -325,8 +360,8 @@ provider.setCustomParameters({
     setFlagLoader(true);
 
     let list = await deleteBackendProduct(product);
-    console.log("list in delete ecom");
-    console.log(list);
+    // console.log("list in delete ecom");
+    // console.log(list);
 
     setProductList(list);
     setFlagLoader(false);
@@ -350,7 +385,13 @@ provider.setCustomParameters({
     setView("productPage");
   }
   function handleBuyButtonClick() {
-    setView("bill");
+    if (CartItems.length === 0) {
+      setView("noelement");
+    } else if (!user) {
+      handleLoginButtonClickUsingGoogle(() => setView("bill"));
+    } else {
+      setView("bill");
+    }
   }
   function handleChangeKeyUp(event) {
     let t = event.target.value;
@@ -359,7 +400,7 @@ provider.setCustomParameters({
      list = productList.filter((e, index) =>
       e.name.toLowerCase().startsWith(t.toLowerCase())
     );
-    console.log(list);
+    // console.log(list);
 
     setProductList(list);
   }
@@ -372,76 +413,94 @@ provider.setCustomParameters({
       return productList
     }
 
-    console.log(text);
+    // console.log(text);
   }
+  // if (flagLoader) {
+  //   return (
+  //     <div className="  text-center my-5 d-flex justify-content-center">
+  //       <RingLoader size={50} color={"green"} className="" />
+  //     </div>
+  //   );
+  // }
   if (flagLoader) {
-    return (
-      <div className="  text-center my-5 d-flex justify-content-center">
-        <RingLoader size={50} color={"green"} className="" />
+  return (
+    <div className="d-flex justify-content-center my-3">
+      <div style={{ width: "130px", height: "130px" }}>
+        <DotLottieReact
+      src="https://lottie.host/f0e73916-992c-4ae7-a55d-14e4511d17e4/ud5X90cbps.lottie"
+      loop
+      autoplay
+    />
       </div>
-    );
-  }
-  function handleLoginButtonClickUsingGoogle() {
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-        // console.log(user);
-        let usr = { user };
-        usr.name = user.displayName;
-        usr.emailid = user.email;
-        if (usr.emailid == "mankarsiddhesh732@gmail.com") {
-          usr.role = "admin";
-          setView("admin");
-          setLoginStatus("success");
-        } else {
-          usr.role = "user";
-          setView("productPage");
-          setLoginStatus("success");
-        }
-        setUser(usr);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
-  }
+    </div>
+  );
+}
+  async function handleLoginButtonClickUsingGoogle(afterLogin) {
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const firebaseUser = result.user;
+      const emailid = firebaseUser.email || "";
+      const usr = {
+        user: firebaseUser,
+        name: firebaseUser.displayName || emailid,
+        emailid,
+        role: emailid === "mankarsiddhesh732@gmail.com" ? "admin" : "user",
+      };
 
+      setUser(usr);
+      setLoginStatus("success");
+      if (afterLogin) {
+        afterLogin();
+      } else if (usr.role === "admin") {
+        setView("admin");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+      
+    }
+  }
 
   function handleButtonLogout() {
-    
-    auth.signOut();
+    auth.signOut().catch((error) => {
+      console.error("Sign-out failed:", error);
+      setMessage("Unable to sign out. Please try again.");
+    });
     setView("productPage");
-    setUser("");
-    if (cnt <= 0 && totalprice <= 0) {
-      setView("productPage");
-    } else if (!user) {
-      // setMessage("You need to login first!");
-      // console.log("you need to login first");
-      setCartItems("");
-      setTimeout(() => {
-        // setMessage("");
-        window.alert("you need to login first");
-        // setView("Login");
-      }, 1000); // Clear message after 2 seconds
-    }
-    // setCartItems("")
-
-   
   }
+
+  function handleHeroAddToCart(product) {
+    if (!product) return;
+
+    const addProductAndOpenCart = () => {
+      handleAddToCart(product);
+      setView("cart");
+    };
+
+    if (!user) {
+      handleLoginButtonClickUsingGoogle(addProductAndOpenCart);
+      return;
+    }
+
+    addProductAndOpenCart();
+  }
+
+  function handleProductAddToCart(product) {
+    if (!user) {
+      handleLoginButtonClickUsingGoogle(() => handleAddToCart(product));
+      return;
+    }
+
+    handleAddToCart(product);
+  }
+
+  const featuredProduct =
+    productList.find((product) =>
+      (product.image || "").toLowerCase().includes("shoes4.jpg")
+    ) || productList[0];
+
   return (
     <>
+    
       <div className="">
         <NavBar
           cnt={cnt}
@@ -458,28 +517,55 @@ provider.setCustomParameters({
           productList={productList}
         ></NavBar>
       </div>
+      {message && <div className="alert alert-warning mx-3 mx-lg-5" role="alert">{message}</div>}
       {/* HERO SECTION (ONLY on product page) */}
       {view === "productPage" && (
         <>
-          <HeroSection />
+          <HeroSection
+            featuredProduct={featuredProduct}
+            onShopNow={() => setView("shopPage")}
+            onBrowseCategories={() => setView("categoriesPage")}
+            onAddToCart={handleHeroAddToCart}
+          />
           <PremiumSections />
         </>
+      )}
+      {view === "categoriesPage" && (
+        <Categories onSelectCategory={handleCategorySelect} />
       )}
       {view== "aboutPage" && (<div><AboutUspage
                 onFormButtonClick={handleFormButtonClick}></AboutUspage></div>)}
                  {view== "contactPage" && (<div><ContactPage
                 onFormButtonClick={handleFormButtonClick}></ContactPage></div>)}
       <div className="  productbg ">
-        {view == "productPage" && (
+        {(view == "productPage" || view == "shopPage") && (
           <div className="">
             <ProductPage
               productList={productList}
               text={text}
               onFormButtonClick={handleFormButtonClick}
-              onAddToCart={handleAddToCart}
+              onAddToCart={handleProductAddToCart}
               onIncrement={handleIncrement}
               onDecrement={handleDecrement}
             ></ProductPage>
+          </div>
+        )}
+        {view === "categoryProducts" && (
+          <div className="">
+            <ProductPage
+              productList={categoryProductList.map((product) => {
+                const currentProduct = productList.find(
+                  (item) => (item.id || item._id) === (product.id || product._id)
+                );
+                return { ...product, qty: currentProduct?.qty || 0 };
+              })}
+              category={selectedCategory}
+              loadError={categoryLoadError}
+              onFormButtonClick={handleFormButtonClick}
+              onAddToCart={handleProductAddToCart}
+              onIncrement={handleIncrement}
+              onDecrement={handleDecrement}
+            />
           </div>
         )}
       </div>
@@ -560,4 +646,3 @@ provider.setCustomParameters({
     </>
   );
 }
-

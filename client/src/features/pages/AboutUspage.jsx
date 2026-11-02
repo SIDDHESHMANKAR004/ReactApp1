@@ -125,13 +125,13 @@ export default function About(props) {
             >
                 <div className="container">
                     <div className="row g-5 align-items-center">
-                        {/* Image side */}
                         <motion.div variants={fadeUp} className="col-lg-6 order-2 order-lg-1">
                             <div className="position-relative">
                                 <div className="position-relative" style={{ aspectRatio: "4/5", backgroundColor: "#1A1A1A", borderRadius: "24px", overflow: "hidden" }}>
                                     <div className="position-absolute inset-0" style={{ background: "linear-gradient(135deg, rgba(204, 85, 0, 0.1), transparent)" }} />
                                     <div className="position-absolute inset-0 d-flex align-items-center justify-content-center">
-                                        <span className="text-white-50 display-1 fw-bold" style={{ opacity: 0.1 }}>SK</span>
+                                                                <img className="img-fluid" src="aboutimg.png" alt="" />
+
                                     </div>
                                     {/* Decorative frame */}
                                     <div className="position-absolute bottom-0 end-0 w-100 h-100 border border-2" style={{ borderColor: "rgba(204, 85, 0, 0.2)", borderRadius: "24px", transform: "translate(8px, 8px)", zIndex: -1 }} />
@@ -290,12 +290,7 @@ export default function About(props) {
                             >
                                 Browse Collection
                             </button>
-                            <button className="btn btn-lg px-5 py-3 text-white-50 fw-medium rounded-pill border transition-all" style={{ borderColor: "rgba(255,255,255,0.1)", transition: "all 0.3s ease" }}
-                                onMouseEnter={(e) => { e.target.style.color = "#fff"; e.target.style.borderColor = "rgba(255,255,255,0.3)" }}
-                                onMouseLeave={(e) => { e.target.style.color = "rgba(255,255,255,0.5)"; e.target.style.borderColor = "rgba(255,255,255,0.1)" }}
-                            >
-                                Learn More
-                            </button>
+                            
                         </motion.div>
 
                         {/* Trust badges */}

@@ -9,6 +9,7 @@ const productSchema = new mongoose.Schema(
     },
     image: String,
     unit: String,
+    category: String,
     mrp: String,
     discount: String,
     inStock: {
@@ -26,9 +27,17 @@ const productSchema = new mongoose.Schema(
 const Product = mongoose.model('Product', productSchema);
 
 // Get all products
-async function getProductsFromBackend() {
+async function getProductsFromBackend(category) {
   try {
-    const products = await Product.find({});
+    const filter = category
+      ? {
+          category: {
+            $regex: `^${category.trim().replace(/[.*+?^${}()|[\]\\]/g, '\\$&')}$`,
+            $options: 'i',
+          },
+        }
+      : {};
+    const products = await Product.find(filter);
     return products.map((product) => ({
       ...product.toObject(),
       id: product._id.toString(),

@@ -1,8 +1,17 @@
 import React from "react";
-import Reveal from "./Reveal";
+import Reveal from "../../components/common/Reveal";
 
-export default function HeroSection() {
+
+export default function HeroSection({
+  featuredProduct,
+  onShopNow,
+  onBrowseCategories,
+  onAddToCart,
+}) {
   const featurePill = ["Free express shipping", "2-year warranty", "Premium materials"];
+  const featuredPrice = featuredProduct
+    ? Number(featuredProduct.mrp) * (1 - Number(featuredProduct.discount || 0) / 100)
+    : null;
 
   return (
     <section className="hero-section py-5">
@@ -22,8 +31,8 @@ export default function HeroSection() {
                 Discover modern comfort, refined craftsmanship, and limited-edition silhouettes built for everyday luxury.
               </p>
               <div className="hero-actions d-flex flex-wrap gap-3">
-                <a href="/products" className="btn btn-dark animate-button">Shop now</a>
-                <a href="/collections" className="btn btn-outline-dark animate-button">Browse categories</a>
+                <button type="button" className="btn btn-dark animate-button" onClick={onShopNow}>Shop now</button>
+                <button type="button" className="btn btn-outline-dark animate-button" onClick={onBrowseCategories}>Browse categories</button>
               </div>
             </Reveal>
           </div>
@@ -33,15 +42,22 @@ export default function HeroSection() {
                 <span className="fw-semibold">Featured drop</span>
                 <span className="badge rounded-pill bg-warning text-dark">New</span>
               </div>
-              <img src="/shoes4.jpg" alt="Featured product" className="w-100 rounded-4 mb-3 animate-image img-fluid" style={{ height: "260px", objectFit: "cover" }} />
-              <h4 className="fw-bold mb-2">Lunar Runner</h4>
+              <img src={featuredProduct?.image || "/shoes4.jpg"} alt={featuredProduct?.name || "Featured product"} className="w-100 rounded-4 mb-3 animate-image img-fluid" style={{ height: "260px", objectFit: "cover" }} />
+              <h4 className="fw-bold mb-2">{featuredProduct?.name || "Lunar Runner"}</h4>
               <p className="text-muted mb-3">Lightweight comfort with sculpted cushioning and signature detailing.</p>
               <div className="d-flex justify-content-between align-items-center">
                 <div>
-                  <div className="fw-bold">₹4,999</div>
+                  <div className="fw-bold">{featuredPrice === null ? "₹800" : `₹${featuredPrice.toFixed(2)}`}</div>
                   <div className="small text-muted">Free shipping</div>
                 </div>
-                <a href="/products" className="btn btn-dark btn-sm animate-button">Add to bag</a>
+                <button
+                  type="button"
+                  className="btn btn-dark btn-sm animate-button"
+                  disabled={!featuredProduct || featuredProduct.inStock === false}
+                  onClick={() => onAddToCart(featuredProduct)}
+                >
+                  {featuredProduct?.inStock === false ? "Out of stock" : "Add to bag"}
+                </button>
               </div>
             </Reveal>
           </div>

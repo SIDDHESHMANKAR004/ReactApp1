@@ -1,6 +1,6 @@
-import "./App.css";
+import "../App.css";
 
-import Ecommerce from "./Ecommerce";
+import Ecommerce from "../features/pages/Ecommerce";
 
 
 export default function App() {

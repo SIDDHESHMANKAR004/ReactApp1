@@ -1,4 +1,4 @@
-import "./index.css";
+import "../../hooks/index.css";
 
 export default function AdminProduct(props) {
   const { product, onAddToCartAdmin, onDeleteCartAdmin } = props;

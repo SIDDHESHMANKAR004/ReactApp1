@@ -1,5 +1,5 @@
 import React from "react";
-import Reveal from "./Reveal";
+import Reveal from "./components/common/Reveal";
 
 const featureCards = [
   { icon: "♻", title: "Sustainable Materials", text: "Thoughtfully sourced fabrics and responsible finishes." },

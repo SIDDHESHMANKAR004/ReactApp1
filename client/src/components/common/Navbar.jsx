@@ -23,7 +23,7 @@ export default function NavBar(props) {
           <div className="col-12 col-lg-7 order-3 order-lg-2">
             <div className="d-flex flex-wrap justify-content-center gap-3 gap-lg-4 align-items-center">
               <a href="#" className="nav-link-custom" onClick={() => handleFormButtonClick("productPage")}>Shop</a>
-              {/* <a href="#" className="nav-link-custom" onClick={() => handleFormButtonClick("categoriesPage")}>Categories</a> */}
+              <a href="#" className="nav-link-custom" onClick={() => handleFormButtonClick("categoriesPage")}>Categories</a>
               <a href="#" className="nav-link-custom" onClick={() => handleFormButtonClick("aboutPage")}>About</a>
               <a href="#" className="nav-link-custom" onClick={() => handleFormButtonClick("contactPage")}>Contact</a>
             </div>

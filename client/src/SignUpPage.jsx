@@ -1,5 +1,5 @@
 import React from "react";
-import Reveal from "./Reveal";
+import Reveal from "./components/common/Reveal";
 
 export default function SignUpPage(props) {
   const { signupstatus, onSignUpFormSubmit, onLoginClick } = props;

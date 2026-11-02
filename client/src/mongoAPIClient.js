@@ -33,8 +33,18 @@ async function requestWithErrorHandling(method, path, data, action) {
 
 // ===================== PRODUCT API CALLS =====================
 
-async function getProductsFromBackend() {
-  return requestWithErrorHandling('get', '/api/products', null, 'fetch products');
+async function getProductsFromBackend(category) {
+  const path = category
+    ? `/api/products?category=${encodeURIComponent(category)}`
+    : '/api/products';
+  const response = await requestWithErrorHandling('get', path, null, 'fetch products');
+  const products = typeof response === 'string' ? JSON.parse(response) : response;
+
+  if (!Array.isArray(products)) {
+    throw new TypeError('The products API did not return a product list');
+  }
+
+  return products;
 }
 
 async function getSingleProductFromBackend(id) {

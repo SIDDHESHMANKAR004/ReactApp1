@@ -1,4 +1,4 @@
-import Reveal from "./Reveal";
+import Reveal from "../../components/common/Reveal";
 
 export default function Login(props) {
   const { loginStatus, name, onLoginFormSubmit } = props;

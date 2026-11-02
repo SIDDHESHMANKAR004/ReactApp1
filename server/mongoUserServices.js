@@ -32,7 +32,7 @@ async function addUserToBackend(user) {
   try {
     const newUser = new User(user);
     const savedUser = await newUser.save();
-    console.log('User created with ID:', savedUser._id);
+    // console.log('User created with ID:', savedUser._id);
     return {
       ...savedUser.toObject(),
       id: savedUser._id.toString(),
